@@ -7,16 +7,28 @@ export const CreateTaskDialog = () => {
 
 	return (
 		<>
-			<button
-				type="button"
-				className="rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black"
-				onClick={() => {
-					dailogRef.current?.show();
-				}}
-                style={{ animationDelay: "0.20s", animationFillMode: "forwards" }}
-			>
-				File a report
-			</button>
+			<div className="flex justify-center flex-col md:flex-row">
+				<button
+					className="btn-primary m-3"
+					onClick={() => {
+						dailogRef.current?.show();
+					}}
+				>
+					New report
+				</button>
+				<div className='flex justify-center md:p-1.5 md:m-3'>
+				OR
+				</div>
+				<button
+					className="btn-primary m-3"
+					onClick={() => {
+						dailogRef.current?.show();
+					}}
+				>
+					View existing
+				</button>
+			</div>
+
 			<dialog
 				ref={dailogRef}
 				className="h-full w-full items-center justify-center bg-[transparent] backdrop:backdrop-blur-md [&[open]]:flex"
