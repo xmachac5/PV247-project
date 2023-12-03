@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    /* Button style for primary actions - i.e. apply, send, open primary dialog...*/
+    .btn-primary {
+        @apply rounded-full p-1.5 drop-shadow-2xl px-4 text-sm;
+        @apply bg-cyan-500 hover:bg-cyan-600 text-white transition-all ease-in-out;
+    }
+
+    /* Button style for secondary actions - i.e. cancel */
+    .btn-secondary {
+        /*TODO: maybe gray bacground*/
+    }
+
+    /* Button for destructive operation i.e. "delete user" */
+    .btn-destructive {
+        /*TODO: use red background*/
+    }
+}
