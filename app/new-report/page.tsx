@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FieldError, useForm } from "react-hook-form";
 import { useState } from "react";
 
 type PersonalData = {
@@ -87,12 +87,30 @@ const PersonalDataForm = () => {
 };
 
 type Report = {
+  title: string;
+  reason: string;
   description: string;
+  password: string;
+  repeatedPassword: string;
+  datetime: string;
 };
 
 export const reportSchema: z.ZodType<Report> = z.object({
-  description: z.string().min(1).max(500),
+  title: z.string(),
+  reason: z.string(),
+  description: z.string(),
+  password: z.string().min(4).max(30),
+  repeatedPassword: z.string().min(4).max(30),
+  datetime: z.string(),
 });
+
+const ErrMsg = ({ error }: { error: FieldError | undefined }) => {
+  return error?.message !== undefined ? (
+    <p className="font-bold text-red-700 break-words max-w-prose">{error?.message}</p>
+  ) : (
+    <></>
+  );
+};
 
 const LawyerPage = () => {
   const {
@@ -121,18 +139,72 @@ const LawyerPage = () => {
           checked={anonymous}
           onChange={() => setAnonymous(!anonymous)}
         />
-        <label>Zostat v anonymite</label>
+        <label>Stay anonymous</label>
       </div>
       {!anonymous && <PersonalDataForm />}
 
       <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="description"> Description: </label>
-        <textarea
-          id="description"
-          className="text-box"
-          {...register("description")}
-        />
-        {errors.description?.message && <p>{errors.description?.message}</p>}
+        <div className="flex space-x-3">
+          <div>
+            <label>
+              Password:
+              <input
+                type="password"
+                className="text-box block w-[100%]"
+                {...register("password")}
+              />
+            </label>
+			<ErrMsg error={errors.password}/>
+          </div>
+
+          <label>
+            Repeat password:
+            <input
+              type="password"
+              className="text-box block w-[100%]"
+              {...register("repeatedPassword")}
+            />
+			<ErrMsg error={errors.repeatedPassword}/>
+          </label>
+        </div>
+
+        <label className="mt-3">
+          Title of the report:
+          <input className="text-box block w-[100%]" {...register("title")} />
+        </label>
+        <ErrMsg error={errors.title} />
+
+        <label className="mt-3">
+          Reason of the report:
+          <textarea
+            className="text-box block w-[100%]"
+            {...register("reason")}
+          />
+        </label>
+        <ErrMsg error={errors.reason} />
+
+        <label className="mt-3">
+          When did the incident occur?
+          <input
+            type="datetime-local"
+            className="text-box block w-[100%]"
+            {...register("datetime")}
+          />
+        </label>
+        <ErrMsg error={errors.datetime} />
+
+        <label className="mt-3">
+          Detailed description of the unlawfull action(s):
+          <textarea
+            className="text-box block w-[100%]"
+            {...register("description")}
+          />
+        </label>
+        <ErrMsg error={errors.description} />
+
+        <div className="flex justify-end">
+          <input type="submit" className="btn-primary" value="Send Report" />
+        </div>
       </form>
     </div>
   );
