@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 
 export const CreateTaskDialog = () => {
@@ -8,14 +9,12 @@ export const CreateTaskDialog = () => {
 	return (
 		<>
 			<div className="flex justify-center flex-col md:flex-row">
-				<button
+				<Link
+					href="/new-report"
 					className="btn-primary m-3"
-					onClick={() => {
-						dailogRef.current?.show();
-					}}
 				>
 					New report
-				</button>
+				</Link>
 				<div className='flex justify-center md:p-1.5 md:m-3'>
 				OR
 				</div>
