@@ -14,7 +14,7 @@ type PersonalData = {
 };
 
 // TODO: proper validation
-export const personalDataSchema: z.ZodType<PersonalData> = z.object({
+const personalDataSchema: z.ZodType<PersonalData> = z.object({
   name: z.string().min(1).max(50),
   surname: z.string().min(1).max(50),
   dateBorn: z.date(),
