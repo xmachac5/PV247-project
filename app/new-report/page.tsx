@@ -9,10 +9,18 @@ type PersonalData = {
   name: string;
   surname: string;
   dateBorn: Date;
+  email: string;
+  phone: string;
 };
 
-export const personalDataSchema: z.ZodType<Omit<Gift, "id">> = z.object({
+// TODO: proper validation
+export const personalDataSchema: z.ZodType<PersonalData> = z.object({
   name: z.string().min(1).max(50),
+  surname: z.string().min(1).max(50),
+  dateBorn: z.date(),
+  address: z.string().min(1).max(120),
+  email: z.string().min(1).max(120),
+  phone: z.string().min(1).max(120),
 });
 
 const PersonalDataForm = () => {
@@ -27,7 +35,7 @@ const PersonalDataForm = () => {
   });
 
   return (
-    <div className="mb-8">
+    <div className="mb-8 space-y-3">
       <div className="flex space-x-3">
         <div>
           <label className="block" htmlFor="name">
@@ -35,6 +43,15 @@ const PersonalDataForm = () => {
           </label>
           <input className="text-box block" id="name" {...register("name")} />
           {errors.name?.message && <p>{errors.name?.message}</p>}
+
+          <label className="block">
+            Date Born:
+            <input
+              className="text-box block w-[100%]"
+              type="date"
+              {...register("dateBorn")}
+            />
+          </label>
         </div>
         <div>
           <label className="block" htmlFor="surname">
@@ -48,19 +65,23 @@ const PersonalDataForm = () => {
           {errors.surname?.message && <p>{errors.surname?.message}</p>}
         </div>
       </div>
-	
 
-      <div>
-		<label className="block" htmlFor="dateBorn">
-		  Date Born:{" "}
-		</label>
-		<input
-		  className="block text-box"
-		  id="dateBorn"
-		  type="date"
-		  {...register("dateBorn")}
-		/>
-	  </div>
+      <label className="block">
+        Address (street name and street number):
+        <input className="text-box block w-[100%]" {...register("address")} />
+      </label>
+
+      <div className="flex space-x-3">
+        <label className="block">
+          Email:
+          <input className="text-box block" {...register("email")} />
+        </label>
+
+        <label className="block">
+          Phone number:
+          <input className="text-box block" {...register("email")} />
+        </label>
+      </div>
     </div>
   );
 };
