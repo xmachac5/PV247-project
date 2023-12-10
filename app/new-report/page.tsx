@@ -9,6 +9,7 @@ type PersonalData = {
   name: string;
   surname: string;
   dateBorn: Date;
+  address: string;
   email: string;
   phone: string;
 };
@@ -95,7 +96,7 @@ type Report = {
   datetime: string;
 };
 
-export const reportSchema: z.ZodType<Report> = z.object({
+const reportSchema: z.ZodType<Report> = z.object({
   title: z.string(),
   reason: z.string(),
   description: z.string(),
