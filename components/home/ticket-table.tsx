@@ -32,19 +32,19 @@ const TicketTable = ({ data }: TicketTableProps) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((todo) => (
+            {data.map((ticket) => (
               <tr
-                key={todo.id}
+                key={ticket.id}
                 className="text-center text-gray-500 opacity-0 [text-wrap:balance] md:text-xl animate-fade-up"
                 style={{ animationDelay: "0s", animationFillMode: "forwards" }}
               >
-                <td className="py-2 px-4 border-b">{todo.id}</td>
-                <td className="py-2 px-4 border-b">{todo.title}</td>
-                <td className="py-2 px-4 border-b">{todo.created_at}</td>
-                <td className="py-2 px-4 border-b">{todo.state}</td>
-                <td className="py-2 px-4 border-b">{todo.due_date}</td>
+                <td className="py-2 px-4 border-b">{ticket.id}</td>
+                <td className="py-2 px-4 border-b">{ticket.title}</td>
+                <td className="py-2 px-4 border-b">{ticket.created_at}</td>
+                <td className="py-2 px-4 border-b">{ticket.state}</td>
+                <td className="py-2 px-4 border-b">{ticket.due_date}</td>
                 <td className="py-2 px-4 border-b">
-                  <Link href="/[id]" as={`/${todo.id}`}>
+                  <Link href="/[id]" as={`/${ticket.id}`}>
                     <p className="text-blue-500">View Details</p>
                   </Link>
                 </td>

@@ -37,8 +37,8 @@ export default function NavBar({ session }: { session: Session | null }) {
           <div>
             <Link
               prefetch={false}
-              className={`link ${pathname === "/whistleblowerList" ? "active" : ""} rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black`}
-              href="/whistleblowerList"
+              className={`link ${pathname === "/ticketList" ? "active" : ""} rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black`}
+              href="/ticketList"
             >
               Tickets
             </Link>
