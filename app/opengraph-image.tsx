@@ -10,6 +10,9 @@ export default async function OG() {
     new URL("./fonts/SF-Pro-Display-Medium.otf", import.meta.url),
   ).then((res) => res.arrayBuffer());
 
+// FIXME: this generates compile time errors!
+  throw new Error("not implemented")
+  /*
   return new ImageResponse(
     (
       <div
@@ -57,4 +60,5 @@ export default async function OG() {
       ],
     },
   );
+  */
 }
