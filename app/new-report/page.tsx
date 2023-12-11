@@ -1,28 +1,9 @@
 "use client";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldError, UseFormReturn, useForm } from "react-hook-form";
 import { useState } from "react";
-
-type PersonalData = {
-  name: string;
-  surname: string;
-  dateBorn: string;
-  address: string;
-  email: string;
-  phone: string;
-};
-
-// TODO: proper validation
-const personalDataSchema: z.ZodType<PersonalData> = z.object({
-  name: z.string().min(1).max(50),
-  surname: z.string().min(1).max(50),
-  dateBorn: z.string(),
-  address: z.string().min(1).max(120),
-  email: z.string().min(1).max(120),
-  phone: z.string().min(1).max(120),
-});
+import { Report, PersonalData, personalDataSchema, reportSchema } from "../model/report";
 
 const PersonalDataForm = ({
   formHook,
@@ -89,24 +70,6 @@ const PersonalDataForm = ({
     </div>
   );
 };
-
-type Report = {
-  title: string;
-  reason: string;
-  description: string;
-  password: string;
-  repeatedPassword: string;
-  datetime: string;
-};
-
-const reportSchema: z.ZodType<Report> = z.object({
-  title: z.string(),
-  reason: z.string(),
-  description: z.string(),
-  password: z.string().min(4).max(30),
-  repeatedPassword: z.string().min(4).max(30),
-  datetime: z.string(),
-});
 
 const ErrMsg = ({ error }: { error: FieldError | undefined }) => {
   return error?.message !== undefined ? (
