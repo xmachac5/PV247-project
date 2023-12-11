@@ -107,7 +107,9 @@ const reportSchema: z.ZodType<Report> = z.object({
 
 const ErrMsg = ({ error }: { error: FieldError | undefined }) => {
   return error?.message !== undefined ? (
-    <p className="font-bold text-red-700 break-words max-w-prose">{error?.message}</p>
+    <p className="max-w-prose break-words font-bold text-red-700">
+      {error?.message}
+    </p>
   ) : (
     <></>
   );
@@ -155,7 +157,7 @@ const LawyerPage = () => {
                 {...register("password")}
               />
             </label>
-			<ErrMsg error={errors.password}/>
+            <ErrMsg error={errors.password} />
           </div>
 
           <label>
@@ -165,7 +167,7 @@ const LawyerPage = () => {
               className="text-box block w-[100%]"
               {...register("repeatedPassword")}
             />
-			<ErrMsg error={errors.repeatedPassword}/>
+            <ErrMsg error={errors.repeatedPassword} />
           </label>
         </div>
 
