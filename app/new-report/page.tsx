@@ -2,13 +2,13 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldError, useForm } from "react-hook-form";
+import { FieldError, UseFormReturn, useForm } from "react-hook-form";
 import { useState } from "react";
 
 type PersonalData = {
   name: string;
   surname: string;
-  dateBorn: Date;
+  dateBorn: string;
   address: string;
   email: string;
   phone: string;
@@ -18,22 +18,21 @@ type PersonalData = {
 const personalDataSchema: z.ZodType<PersonalData> = z.object({
   name: z.string().min(1).max(50),
   surname: z.string().min(1).max(50),
-  dateBorn: z.date(),
+  dateBorn: z.string(),
   address: z.string().min(1).max(120),
   email: z.string().min(1).max(120),
   phone: z.string().min(1).max(120),
 });
 
-const PersonalDataForm = () => {
+const PersonalDataForm = ({
+  formHook,
+}: {
+  formHook: UseFormReturn<PersonalData, PersonalData, any>;
+}) => {
   const {
-    control,
     register,
-    handleSubmit,
-    reset,
     formState: { errors },
-  } = useForm<PersonalData>({
-    resolver: zodResolver(personalDataSchema),
-  });
+  } = formHook;
 
   return (
     <div className="mb-8 space-y-3">
@@ -43,7 +42,7 @@ const PersonalDataForm = () => {
             Name:{" "}
           </label>
           <input className="text-box block" id="name" {...register("name")} />
-          {errors.name?.message && <p>{errors.name?.message}</p>}
+          <ErrMsg error={errors.name} />
 
           <label className="block">
             Date Born:
@@ -52,6 +51,7 @@ const PersonalDataForm = () => {
               type="date"
               {...register("dateBorn")}
             />
+            <ErrMsg error={errors.dateBorn} />
           </label>
         </div>
         <div>
@@ -63,7 +63,7 @@ const PersonalDataForm = () => {
             id="surname"
             {...register("surname")}
           />
-          {errors.surname?.message && <p>{errors.surname?.message}</p>}
+          <ErrMsg error={errors.surname} />
         </div>
       </div>
 
@@ -71,17 +71,20 @@ const PersonalDataForm = () => {
         Address (street name and street number):
         <input className="text-box block w-[100%]" {...register("address")} />
       </label>
+      <ErrMsg error={errors.address} />
 
       <div className="flex space-x-3">
         <label className="block">
           Email:
           <input className="text-box block" {...register("email")} />
         </label>
+        <ErrMsg error={errors.email} />
 
         <label className="block">
           Phone number:
-          <input className="text-box block" {...register("email")} />
+          <input className="text-box block" {...register("phone")} />
         </label>
+        <ErrMsg error={errors.phone} />
       </div>
     </div>
   );
@@ -121,14 +124,61 @@ const LawyerPage = () => {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm<Report>({
     resolver: zodResolver(reportSchema),
   });
 
+  const personalDataFormHook = useForm<PersonalData>({
+    resolver: zodResolver(personalDataSchema),
+  });
+
   const [anonymous, setAnonymous] = useState(false);
 
-  const onSubmit = () => {};
+  const customChecks = (report: Report) => {
+    let ok = true;
+    if (report.password !== report.repeatedPassword) {
+      setError("repeatedPassword", {
+        type: "custom",
+        message: "Passwords does not match",
+      });
+      ok = false;
+    }
+
+    return ok;
+  }
+
+  const onSubmit = async (report: Report) => {
+    let personalData = undefined;
+    
+    if (!anonymous) {
+      console.log("not anonymous");
+
+      let ok = await personalDataFormHook.trigger();
+      if (!ok) {
+        console.log("error when getting personal data");
+        return;
+      } else {
+        personalData = personalDataFormHook.getValues();
+      }
+    } else {
+      console.log("anonymous");
+    }
+
+    if (customChecks(report)) {
+      let data = {...report, personalData: personalData};
+      
+      await fetch('/api/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+    }
+  };
 
   return (
     <div
@@ -144,7 +194,7 @@ const LawyerPage = () => {
         />
         <label>Stay anonymous</label>
       </div>
-      {!anonymous && <PersonalDataForm />}
+      {!anonymous && <PersonalDataForm formHook={personalDataFormHook} />}
 
       <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex space-x-3">
