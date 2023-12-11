@@ -1,13 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
-type ResponseData = {
-    message: string,
-}
+import { reportSchema } from '@/app/model/report';
  
 export const POST = async (
   req: Request,
-) => {
-    const data = await req.json();
-    console.log("POST", data)
+) => { 
+    const data = await reportSchema.parse(await req.json());
+    console.log("TODO store to database: ", data);
     return new Response(null, {status: 200});
 };

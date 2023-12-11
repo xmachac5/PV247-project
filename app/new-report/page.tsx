@@ -4,6 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldError, UseFormReturn, useForm } from "react-hook-form";
 import { useState } from "react";
 import { Report, PersonalData, personalDataSchema, reportSchema } from "../model/report";
+import { z } from "zod";
+
+const reportFormSchema = reportSchema.extend({
+  repeatedPassword: z.string().min(4),
+}).omit({
+  personalData: true,
+})
+
+type ReportForm = z.infer<typeof reportFormSchema>;
 
 const PersonalDataForm = ({
   formHook,
@@ -89,8 +98,8 @@ const LawyerPage = () => {
     reset,
     setError,
     formState: { errors },
-  } = useForm<Report>({
-    resolver: zodResolver(reportSchema),
+  } = useForm<ReportForm>({
+    resolver: zodResolver(reportFormSchema),
   });
 
   const personalDataFormHook = useForm<PersonalData>({
@@ -99,7 +108,7 @@ const LawyerPage = () => {
 
   const [anonymous, setAnonymous] = useState(false);
 
-  const customChecks = (report: Report) => {
+  const customChecks = (report: ReportForm) => {
     let ok = true;
     if (report.password !== report.repeatedPassword) {
       setError("repeatedPassword", {
@@ -112,7 +121,7 @@ const LawyerPage = () => {
     return ok;
   }
 
-  const onSubmit = async (report: Report) => {
+  const onSubmit = async (report: ReportForm) => {
     let personalData = undefined;
     
     if (!anonymous) {
