@@ -3,14 +3,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldError, UseFormReturn, useForm } from "react-hook-form";
 import { useState } from "react";
-import { Report, PersonalData, personalDataSchema, reportSchema } from "../model/report";
+import {
+  Report,
+  PersonalData,
+  personalDataSchema,
+  reportSchema,
+} from "../model/report";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
-const reportFormSchema = reportSchema.extend({
-  repeatedPassword: z.string().min(4),
-}).omit({
-  personalData: true,
-})
+const reportFormSchema = reportSchema
+  .extend({
+    repeatedPassword: z.string().min(4),
+  })
+  .omit({
+    personalData: true,
+  });
 
 type ReportForm = z.infer<typeof reportFormSchema>;
 
@@ -26,15 +34,15 @@ const PersonalDataForm = ({
 
   return (
     <div className="mb-8 space-y-3">
-      <div className="flex space-x-3">
+      <div className="flex flex-col sm:flex-row">
         <div>
-          <label className="block" htmlFor="name">
-            Name:{" "}
+          <label className="mx-3 block flex-grow">
+            Name:
+            <input className="text-box block" id="name" {...register("name")} />
+            <ErrMsg error={errors.name} />
           </label>
-          <input className="text-box block" id="name" {...register("name")} />
-          <ErrMsg error={errors.name} />
 
-          <label className="block">
+          <label className="mx-3 block flex-grow">
             Date Born:
             <input
               className="text-box block w-[100%]"
@@ -44,37 +52,35 @@ const PersonalDataForm = ({
             <ErrMsg error={errors.dateBorn} />
           </label>
         </div>
-        <div>
-          <label className="block" htmlFor="surname">
-            Surname:{" "}
-          </label>
+        <label className="mx-3 block flex-grow">
+          Surname:
           <input
             className="box text-box"
             id="surname"
             {...register("surname")}
           />
           <ErrMsg error={errors.surname} />
-        </div>
+        </label>
       </div>
 
-      <label className="block">
+      <label className="mx-3 block">
         Address (street name and street number):
         <input className="text-box block w-[100%]" {...register("address")} />
+        <ErrMsg error={errors.address} />
       </label>
-      <ErrMsg error={errors.address} />
 
-      <div className="flex space-x-3">
-        <label className="block">
+      <div className="flex flex-col sm:flex-row">
+        <label className="mx-3 block flex-grow">
           Email:
           <input className="text-box block" {...register("email")} />
+          <ErrMsg error={errors.email} />
         </label>
-        <ErrMsg error={errors.email} />
 
-        <label className="block">
+        <label className="mx-3 block flex-grow">
           Phone number:
           <input className="text-box block" {...register("phone")} />
+          <ErrMsg error={errors.phone} />
         </label>
-        <ErrMsg error={errors.phone} />
       </div>
     </div>
   );
@@ -82,7 +88,7 @@ const PersonalDataForm = ({
 
 const ErrMsg = ({ error }: { error: FieldError | undefined }) => {
   return error?.message !== undefined ? (
-    <p className="max-w-prose break-words font-bold text-red-700">
+    <p className="flex-sh break-words font-bold text-red-700 sm:max-w-[20rem]">
       {error?.message}
     </p>
   ) : (
@@ -107,6 +113,7 @@ const LawyerPage = () => {
   });
 
   const [anonymous, setAnonymous] = useState(false);
+  const router = useRouter();
 
   const customChecks = (report: ReportForm) => {
     let ok = true;
@@ -119,11 +126,11 @@ const LawyerPage = () => {
     }
 
     return ok;
-  }
+  };
 
   const onSubmit = async (report: ReportForm) => {
     let personalData = undefined;
-    
+
     if (!anonymous) {
       console.log("not anonymous");
 
@@ -139,27 +146,29 @@ const LawyerPage = () => {
     }
 
     if (customChecks(report)) {
-      let data = {...report, personalData: personalData};
-      
-      await fetch('/api/report', {
-        method: 'POST',
+      let data = { ...report, personalData: personalData };
+
+      const response = await fetch("/api/report", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
+      console.log("response", await response.json());
     }
   };
 
   return (
     <div
-      className="animate-fade-up"
+      className="flex animate-fade-up flex-col"
       style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
     >
-      <div>
+      <div className="flex flex-row">
         <input
-          className="mr-3"
+          className="mx-3 rounded-md text-lg scale-150 ring-cyan-600"
+          style={{color: "#0891b2"}}
           type="checkbox"
           checked={anonymous}
           onChange={() => setAnonymous(!anonymous)}
@@ -168,21 +177,19 @@ const LawyerPage = () => {
       </div>
       {!anonymous && <PersonalDataForm formHook={personalDataFormHook} />}
 
-      <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex space-x-3">
-          <div>
-            <label>
-              Password:
-              <input
-                type="password"
-                className="text-box block w-[100%]"
-                {...register("password")}
-              />
-            </label>
+      <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col sm:flex-row">
+          <label className="block mx-3 flex-grow">
+            Password:
+            <input
+              type="password"
+              className="text-box block w-[100%]"
+              {...register("password")}
+            />
             <ErrMsg error={errors.password} />
-          </div>
+          </label>
 
-          <label>
+          <label className="block mx-3 flex-grow">
             Repeat password:
             <input
               type="password"
@@ -193,42 +200,47 @@ const LawyerPage = () => {
           </label>
         </div>
 
-        <label className="mt-3">
+        <label className="block m-3">
           Title of the report:
           <input className="text-box block w-[100%]" {...register("title")} />
+          <ErrMsg error={errors.title} />
         </label>
-        <ErrMsg error={errors.title} />
-
-        <label className="mt-3">
+        
+        <label className="block m-3">
           Reason of the report:
           <textarea
             className="text-box block w-[100%]"
             {...register("reason")}
           />
+          <ErrMsg error={errors.reason} />
         </label>
-        <ErrMsg error={errors.reason} />
-
-        <label className="mt-3">
+       
+        <label className="block m-3">
           When did the incident occur?
           <input
             type="datetime-local"
             className="text-box block w-[100%]"
             {...register("datetime")}
           />
+          <ErrMsg error={errors.datetime} />
         </label>
-        <ErrMsg error={errors.datetime} />
-
-        <label className="mt-3">
+       
+        <label className="block m-3">
           Detailed description of the unlawfull action(s):
           <textarea
             className="text-box block w-[100%]"
             {...register("description")}
           />
+          <ErrMsg error={errors.description} />
         </label>
-        <ErrMsg error={errors.description} />
 
-        <div className="flex justify-end">
-          <input type="submit" className="btn-primary" value="Send Report" />
+        <div className="flex justify-center m-3">
+          <input
+            type="submit"
+            className="btn-primary"
+            value="Send Report"
+            onClick={(_) => personalDataFormHook.trigger()}
+          />
         </div>
       </form>
     </div>

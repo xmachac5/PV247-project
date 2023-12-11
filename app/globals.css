@@ -10,7 +10,7 @@
     }
 
     .text-box {
-        @apply rounded-md border-2 border-slate-600 bg-white text-black;
+        @apply rounded-md border-2 border-slate-600 bg-white text-black w-[100%] accent-cyan-600;
     }
 
     /* Button style for secondary actions - i.e. cancel */

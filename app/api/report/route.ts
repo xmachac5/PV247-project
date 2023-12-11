@@ -10,5 +10,5 @@ export const POST = async (
     });
 
     console.log(report);
-    return new Response(null, {status: 200});
+    return Response.json({id: report.id});
 };
