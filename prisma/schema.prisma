@@ -60,12 +60,24 @@ model VerificationToken {
 }
 
 model ReportPersonalData {
-  id     String @id @default(cuid())
-  report Report @relation(fields: [id], references: [personalDataId], onDelete: Cascade)
+  id       String @id @default(cuid())
+  reportId String @unique
+  report   Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  name     String
+  surname  String
+  dateBorn DateTime
+  address  String
+  email    String
+  phone    String
 }
 
 model Report {
-  id             String              @id @default(cuid())
-  personalDataId String?             @unique
-  personalData   ReportPersonalData?
+  id           String              @id @default(cuid())
+  title        String
+  reason       String
+  description  String
+  password     String
+  datetime     DateTime
+  personalData ReportPersonalData?
 }

@@ -18,7 +18,7 @@ export const reportSchema = z.object({
   description: z.string(),
   password: z.string().min(4).max(30),
   datetime: z.coerce.date(),
-  personalData: personalDataSchema,
+  personalData: personalDataSchema.optional(),
 });
 
 export type Report = z.infer<typeof reportSchema>;
