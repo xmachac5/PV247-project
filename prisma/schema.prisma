@@ -46,7 +46,7 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
-  image         String?
+  password      String
   accounts      Account[]
   sessions      Session[]
 }
@@ -80,4 +80,9 @@ model Report {
   password     String
   datetime     DateTime
   personalData ReportPersonalData?
+}
+
+model ReportType {
+  id   String @id @default(cuid())
+  name String
 }
