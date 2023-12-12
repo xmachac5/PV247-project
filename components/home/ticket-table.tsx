@@ -7,6 +7,13 @@ type TicketTableProps = {
 	data: DbReport[];
 };
 
+function addDays(date: Date, days: number): Date {
+  let result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+
 const TicketTable = ({ data }: TicketTableProps) => {
   return (
     <div className="mt-6">
@@ -35,7 +42,7 @@ const TicketTable = ({ data }: TicketTableProps) => {
                 <td className="py-2 px-4 border-b">{ticket.title}</td>
                 <td className="py-2 px-4 border-b">{ticket.createdAt.toLocaleString()}</td>
                 <td className="py-2 px-4 border-b">{/*ticket.state*/}</td>
-                <td className="py-2 px-4 border-b">{/*ticket.due_date*/}</td>
+                <td className="py-2 px-4 border-b">{addDays(ticket.createdAt, 30).toLocaleString()}</td>
                 <td className="py-2 px-4 border-b">
                   <Link href="/[id]" as={`/detail/${ticket.id}`}>
                     <p className="text-blue-500">View Details</p>
