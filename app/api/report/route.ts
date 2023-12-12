@@ -11,3 +11,14 @@ export const POST = async (
     console.log(report);
     return Response.json({id: report.id});
 };
+
+export const GET = async () => { 
+  const reports = await prisma.report.findMany({
+    include: {
+      personalData: true,
+    }
+  });
+  console.log(reports);
+
+  return Response.json(reports);
+};
