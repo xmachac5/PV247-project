@@ -88,7 +88,7 @@ export const ReportEditDialog = ({
                                         {...register('type')}
                                     >
                                         {reportTypes.map((reportType, index) => (
-                                            <option key={reportType.id} value={reportType.name}>
+                                            <option key={reportType.id} value={reportType.id}>
                                                 {reportType.name}
                                             </option>
                                         ))}
