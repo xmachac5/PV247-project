@@ -15,16 +15,22 @@ export const LawyerDialog = () => {
     } = useForm<Lawyer>({
         resolver: zodResolver(LawyerDataSchema)
     });
-    const onSubmit: SubmitHandler<Lawyer> = lawyerData => {
+    const onSubmit: SubmitHandler<Lawyer> = async lawyerData => {
         try {
-            fetch('/api/lawyer', {
+            const response = await fetch('/api/lawyer', {
                 method: 'POST',
                 body: JSON.stringify(lawyerData),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
-            dialogRef.current?.close();
+            if (response.ok) {
+                dialogRef.current?.close();
+                window.location.href = '/lawyerList';
+            } else {
+                console.error('Error deleting lawyer:', response.statusText);
+                // Handle error scenarios here
+            }
         } catch (error) {
             // Handle any error that occurs during mutation
         }
