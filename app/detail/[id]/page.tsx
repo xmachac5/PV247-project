@@ -3,7 +3,11 @@ import { usePathname } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { ReportEditDialog } from "@/components/home/report-edit-dialog";
 
-const TicketDetail = async ({ params }: {id: string }) => {
+type Props = {
+  params: { id: string };
+};
+
+const TicketDetail = async ({ params }: Props) => {
   const report = await prisma.report.findFirst({
     where: { id: params.id },
     include: { personalData: true, reportType: true },
