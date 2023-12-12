@@ -3,9 +3,9 @@ import { usePathname } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { ReportEditDialog } from "@/components/home/report-edit-dialog";
 
-const TicketDetail = async ({ id }: { id: string }) => {
+const TicketDetail = async ({ params }: {id: string }) => {
   const report = await prisma.report.findFirst({
-    where: { id: id },
+    where: { id: params.id },
     include: { personalData: true, reportType: true },
   });
 
@@ -68,7 +68,7 @@ const TicketDetail = async ({ id }: { id: string }) => {
           Whistleblower Information
         </h3>
         {personalData == undefined ? (
-          <p className="mb-2 text-lg">Anonymous Whistleblower</p>
+          <p className="mb-2 text-lg">Anonymous Whistleblower {JSON.stringify(report.personalData)}</p>
         ) : (
           <>
             <p className="mb-2 text-lg">{`Name: ${personalData.name}`}</p>
