@@ -15,16 +15,22 @@ export const ReportTypeCreateDialog = () => {
   } = useForm<ReportType>({
     resolver: zodResolver(ReportTypeDataSchema)
   });
-  const onSubmit: SubmitHandler<ReportType> = reportTypeData => {
+  const onSubmit: SubmitHandler<ReportType> = async reportTypeData => {
     try {
-      fetch('/api/reportType', {
+      const response = await fetch('/api/reportType', {
         method: 'POST',
         body: JSON.stringify(reportTypeData),
         headers: {
           'Content-Type': 'application/json'
         }
       })
-      dialogRef.current?.close();
+      if (response.ok) {
+        dialogRef.current?.close();
+        window.location.href = '/reportTypeList';
+      } else {
+        console.error('Error deleting report type:', response.statusText);
+        // Handle error scenarios here
+      }
     } catch (error) {
       // Handle any error that occurs during mutation
     }

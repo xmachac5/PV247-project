@@ -4,7 +4,7 @@ import ReportTypeTable from "@/components/home/report-type-table";
 import { useEffect, useState } from "react";
 import { ReportType } from "../model/reportType";
 
-const TicketTypePage = () => {
+const ReportTypePage = () => {
   const [reportTypes, setLawyers] = useState<ReportType[]>([]);
 
   useEffect(() => {
@@ -31,4 +31,4 @@ const TicketTypePage = () => {
 return <ReportTypeTable data={reportTypes}></ReportTypeTable>;
 };
   
-  export default TicketTypePage;
+  export default ReportTypePage;
