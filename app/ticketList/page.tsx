@@ -6,6 +6,7 @@ const WhistleblowerPage = async () => {
   const reports = await prisma.report.findMany({
     include: {
       personalData: true,
+      reportType: true,
     }
   });
 

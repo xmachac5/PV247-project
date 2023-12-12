@@ -26,6 +26,7 @@ export type Report = z.infer<typeof reportSchema>;
 const dbReportSchema = reportSchema.extend({
   id: z.string(),
   createdAt: z.date(),
+  state: z.string(),
 });
 
 export type DbReport = z.infer<typeof dbReportSchema>;

@@ -16,6 +16,7 @@ const Page = async ({ params, searchParams }: Props) => {
     },
     include: {
       personalData: true,
+      reportType: true,
     },
   });
 
