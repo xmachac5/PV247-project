@@ -60,7 +60,7 @@ export const ReportEditDialog = ({
             })
             if (response.ok) {
                 dialogRef.current?.close();
-                window.location.href = '/reportList';
+                window.location.href = '/detail/' + id;
             } else {
                 console.error('Error editing report:', response.statusText);
                 // Handle error scenarios here
