@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 
-export const CreateTaskDialog = () => {
+export const CreateTaskDialog = ({ reportid }: { reportid?: string }) => {
   const dailogRef = useRef<HTMLDialogElement>(null);
-  const [id, setId] = useState("");
+  const [id, setId] = useState(reportid ?? "");
   const [pasw, setPasw] = useState("");
 
   return (
@@ -27,6 +27,7 @@ export const CreateTaskDialog = () => {
       <dialog
         ref={dailogRef}
         className="h-full w-full items-center justify-center bg-[transparent] backdrop:backdrop-blur-md [&[open]]:flex"
+        open={reportid != null}
       >
         <form className="flex flex-col gap-3 border border-black bg-indigo-50 p-6">
           <h2 className="text-xl">Crime report:</h2>
@@ -44,10 +45,7 @@ export const CreateTaskDialog = () => {
           <Link
             className="rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black"
             href={`/report/${id}?pasw=${pasw}`}
-            as={`/report/${id}`}
             onClick={(e) => {
-            // 
-              //e.preventDefault();
               dailogRef.current?.close();
             }}
           >

@@ -155,8 +155,8 @@ const LawyerPage = () => {
         },
         body: JSON.stringify(data),
       });
-
-      console.log("response", await response.json());
+      const parsed_response = await response.json();
+      router.replace("/report-created/"+parsed_response.id);
     }
   };
 

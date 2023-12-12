@@ -13,6 +13,7 @@ export const GET = async (
         personalData: true,
       }
     });
+    console.log(report);
 
-    return Response.json({report});
+    return Response.json(report);
 };

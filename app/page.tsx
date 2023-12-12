@@ -1,7 +1,7 @@
 import { CreateTaskDialog } from "@/components/home/create-tastk-dialog";
 import { getServerAuthSession } from "./auth-options";
 
-export default async function Home() {
+export default async function Home({searchParams}: {searchParams: {reportid?: string}}) {
   const status = await getServerAuthSession();
   if (!status) {
     return (
@@ -14,7 +14,7 @@ export default async function Home() {
             Making your workplace safer
           </h1>
           <div className="container py-10 px-10 mx-0 min-w-full flex flex-col items-center">
-            <CreateTaskDialog />
+            <CreateTaskDialog reportid={searchParams.reportid}/>
           </div>
           <p
             className="mt-6 animate-fade-up text-center text-gray-500 opacity-0 [text-wrap:balance] md:text-xl"

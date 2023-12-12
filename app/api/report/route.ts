@@ -8,7 +8,6 @@ export const POST = async (
     const report = await prisma.report.create({
       data: {...data, personalData: {create: data.personalData}},
     });
-
     console.log(report);
     return Response.json({id: report.id});
 };
