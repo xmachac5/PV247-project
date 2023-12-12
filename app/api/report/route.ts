@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma'
-import { reportSchema } from '@/app/model/report';
+import { reportSchema, Report } from '@/app/model/report';
 
 export const POST = async (
   req: Request,
@@ -21,4 +21,19 @@ export const GET = async () => {
   console.log(reports);
 
   return Response.json(reports);
+};
+
+export const PUT = async (req: Request) => {
+  const reportToUpdate = (await req.json()) as Report;
+
+  console.log(reportToUpdate);
+  await prisma.reportType.update({
+    where: {
+      id: reportToUpdate.title,
+    },
+    data:{
+      name: reportToUpdate.reason,
+    }
+  });
+  return Response.json(reportToUpdate);
 };
