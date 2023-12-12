@@ -1,6 +1,7 @@
 import { DbReport } from "@/app/model/report";
 import { usePathname } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { ReportEditDialog } from "@/components/home/report-edit-dialog";
 
 const TicketDetail = async ({ id }: { id: string }) => {
   const report = await prisma.report.findFirst({
@@ -59,13 +60,7 @@ const TicketDetail = async ({ id }: { id: string }) => {
               <td>{report.reportType?.name ?? ""}</td>
             </tr>      
           </table>
-          <button
-            className="btn-primary m-3"
-            type="button"
-            // onClick={() => router.push(`/${todo.id + 1}`)}
-          >
-            Edit
-          </button>
+          <ReportEditDialog id={report.id} type={"Type 1"} state={" "}></ReportEditDialog>
         </div>
       )}
       <div className="inline-block rounded-lg border bg-white p-4 shadow-md">

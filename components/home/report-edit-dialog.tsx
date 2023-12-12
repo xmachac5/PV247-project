@@ -60,7 +60,7 @@ export const ReportEditDialog = ({
             })
             if (response.ok) {
                 dialogRef.current?.close();
-                window.location.href = '/detail/' + id;
+                window.location.href = '/ticketList';
             } else {
                 console.error('Error editing report:', response.statusText);
                 // Handle error scenarios here
