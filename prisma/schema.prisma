@@ -81,9 +81,13 @@ model Report {
   password     String
   datetime     DateTime
   personalData ReportPersonalData?
+  reportType   ReportType? @relation(fields: [reportTypeId], references: [id])
+  reportTypeId String?
+  state       String              @default("New")
 }
 
 model ReportType {
   id   String @id @default(cuid())
   name String
+  reports Report[]
 }
