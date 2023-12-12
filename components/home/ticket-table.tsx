@@ -41,7 +41,7 @@ const TicketTable = ({ data }: TicketTableProps) => {
                 <td className="py-2 px-4 border-b">{ticket.id}</td>
                 <td className="py-2 px-4 border-b">{ticket.title}</td>
                 <td className="py-2 px-4 border-b">{ticket.createdAt.toLocaleString()}</td>
-                <td className="py-2 px-4 border-b">{/*ticket.state*/}</td>
+                <td className="py-2 px-4 border-b">{ticket.state}</td>
                 <td className="py-2 px-4 border-b">{addDays(ticket.createdAt, 30).toLocaleString()}</td>
                 <td className="py-2 px-4 border-b">
                   <Link href="/[id]" as={`/detail/${ticket.id}`}>

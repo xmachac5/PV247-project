@@ -1,35 +1,64 @@
-'use client';
+import { DbReport } from "@/app/model/report";
+import { usePathname } from "next/navigation";
+import prisma from "@/lib/prisma";
 
-import { usePathname } from 'next/navigation';
+const TicketDetail = async ({ id }: { id: string }) => {
+  const report = await prisma.report.findFirst({
+    where: { id: id },
+    include: { personalData: true, reportType: true },
+  });
 
-const TicketDetail = () => {
-  const id = usePathname().substring(1);
-  const ticket = {
-    id: 1,
-    title: "test1",
-    created_at: "28.09.2023",
-    state: "new",
-    due_date: "27.10.2023"
-  };
-  const whistleblower = {
-    name: "name",
-    birthdate: "birthdate",
-    address: "address",
-    email: "email",
-    phone: "phone",
-    anonymous: false
+  if (!report) {
+    return <h3 className="mb-4 text-2xl text-red-700">Report not found</h3>;
   }
 
-return (
-    <div className="flex justify-center space-x-6 text-center text-gray-700 opacity-0 [text-wrap:balance] md:text-xl animate-fade-up"
-    style={{ animationDelay: "0s", animationFillMode: "forwards" }}
-    >     
-      {ticket && (
-        <div className="inline-block rounded-lg border bg-white shadow-md p-4">
-          <h3 className="mb-4 text-2xl from-black to-stone-500">{ticket.title}</h3>
-          <p className="mb-2 text-lg">{`ID: ${ticket.id}`}</p>
-          <p className="mb-4 text-lg">{`Completed: ${ticket.state ? 'Yes' : 'No'}`}</p>
-          <p className="mb-2 text-lg">{`Description: ${ticket.state}`}</p>
+  const personalData = report.personalData;
+
+  return (
+    <div
+      className="flex animate-fade-up justify-center space-x-6 text-center text-gray-700 opacity-0 [text-wrap:balance] md:text-xl"
+      style={{ animationDelay: "0s", animationFillMode: "forwards" }}
+    >
+      {report && (
+        <div className="inline-block rounded-lg border bg-white p-4 shadow-md">
+          <h3 className="mb-4 from-black to-stone-500 text-2xl">
+            {report.title}
+          </h3>
+
+          <table>
+            <tr>
+              <th>Id:</th>
+              <td>{report.id}</td>
+            </tr>
+            <tr>
+              <th>Title:</th>
+              <td>{report.title}</td>
+            </tr>
+            <tr>
+              <th>Created at:</th>
+              <td>{report.createdAt.toLocaleDateString()}</td>
+            </tr>
+            <tr>
+              <th>Incident occured at:</th>
+              <td>{report.datetime.toLocaleDateString()}</td>
+            </tr>
+            <tr>
+              <th>Reason:</th>
+              <td>{report.reason}</td>
+            </tr>
+            <tr>
+              <th>Description:</th>
+              <td>{report.description}</td>
+            </tr>
+            <tr>
+              <th>State:</th>
+              <td>{report.state}</td>
+            </tr>
+            <tr>
+              <th>Report type:</th>
+              <td>{report.reportType?.name ?? ""}</td>
+            </tr>      
+          </table>
           <button
             className="btn-primary m-3"
             type="button"
@@ -39,26 +68,22 @@ return (
           </button>
         </div>
       )}
-      {!ticket && (
-        <h3 className="mb-4 text-2xl from-black to-stone-500">Ticket not found</h3>
-      )}
-
-      {whistleblower && (
-        <div className="inline-block rounded-lg border bg-white shadow-md p-4">
-          <h3 className="mb-4 text-2xl from-black to-stone-500">Whistleblower Information</h3>
-          {whistleblower.anonymous ? (
-            <p className="mb-2 text-lg">Anonymous Whistleblower</p>
-          ) : (
-            <>
-              <p className="mb-2 text-lg">{`Name: ${whistleblower.name}`}</p>
-              <p className="mb-2 text-lg">{`Birthdate: ${whistleblower.birthdate}`}</p>
-              <p className="mb-2 text-lg">{`Address: ${whistleblower.address}`}</p>
-              <p className="mb-2 text-lg">{`Email: ${whistleblower.email}`}</p>
-              <p className="mb-2 text-lg">{`Phone: ${whistleblower.phone}`}</p>
-            </>
-          )}
-        </div>
-      )}
+      <div className="inline-block rounded-lg border bg-white p-4 shadow-md">
+        <h3 className="mb-4 from-black to-stone-500 text-2xl">
+          Whistleblower Information
+        </h3>
+        {personalData == undefined ? (
+          <p className="mb-2 text-lg">Anonymous Whistleblower</p>
+        ) : (
+          <>
+            <p className="mb-2 text-lg">{`Name: ${personalData.name}`}</p>
+            <p className="mb-2 text-lg">{`Birthdate: ${personalData.dateBorn}`}</p>
+            <p className="mb-2 text-lg">{`Address: ${personalData.address}`}</p>
+            <p className="mb-2 text-lg">{`Email: ${personalData.email}`}</p>
+            <p className="mb-2 text-lg">{`Phone: ${personalData.phone}`}</p>
+          </>
+        )}
+      </div>
     </div>
   );
 };
