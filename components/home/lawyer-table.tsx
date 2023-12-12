@@ -1,7 +1,10 @@
+import LawyerDeleteButton from "./lawyer-delete-button";
+import { LawyerDialog } from "./lawyer-dialog";
+
 type Lawyer = {
-    id: number;
+    id: string;
     name: string;
-    login: string;
+    email: string;
 }
 
 type LawyerTableProps = {
@@ -18,7 +21,8 @@ const LawyerTable = ({ data }: LawyerTableProps) => {
             <tr>
               <th className="py-2 px-4 border-b">ID</th>
               <th className="py-2 px-4 border-b">Name</th>
-              <th className="py-2 px-4 border-b">Login</th>
+              <th className="py-2 px-4 border-b">Email</th>
+              <th className="py-2 px-4 border-b"><LawyerDialog></LawyerDialog></th>
             </tr>
           </thead>
           <tbody>
@@ -30,7 +34,8 @@ const LawyerTable = ({ data }: LawyerTableProps) => {
               >
                 <td className="py-2 px-4 border-b">{lawyer.id}</td>
                 <td className="py-2 px-4 border-b">{lawyer.name}</td>
-                <td className="py-2 px-4 border-b">{lawyer.login}</td>
+                <td className="py-2 px-4 border-b">{lawyer.email}</td>
+                <td className="py-2 px-4 border-b"><LawyerDeleteButton lawyer={lawyer}></LawyerDeleteButton></td>
               </tr>
             ))}
           </tbody>

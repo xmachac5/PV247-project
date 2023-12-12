@@ -1,20 +1,34 @@
+'use client';
+
 import LawyerTable from "@/components/home/lawyer-table";
+import { Lawyer } from "../model/lawyer";
+import { useEffect, useState } from "react";
 
 const LawyerPage = () => {
-  const data = [
-    {
-      id: 1,
-      name: "lawyer1",
-      login: "lawyer1"
-    },
-    {
-      id: 2,
-      name: "lawyer2",
-      login: "lawyer2"
-    },
-  ];
+  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
 
-  return <LawyerTable data={data}></LawyerTable>;
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/api/lawyer');
+                if (!response.ok) {
+                    console.error(`Error: ${response.status} - ${response.statusText}`);
+                    // Handle the error appropriately, e.g., show a user-friendly message.
+                } else {
+                    const lawyersData = await response.json();
+                    console.log('lawyerData:',lawyersData);
+                    setLawyers(lawyersData);
+                }
+            } catch (error) {
+                console.error('Error fetching movie data:', error);
+                // Handle error
+            }
+        };
+
+        fetchData();
+    }, []);
+
+  return <LawyerTable data={lawyers}></LawyerTable>;
 };
 
 export default LawyerPage;
