@@ -88,7 +88,7 @@ const PersonalDataForm = ({
 
 const ErrMsg = ({ error }: { error: FieldError | undefined }) => {
   return error?.message !== undefined ? (
-    <p className="flex-sh break-words font-bold text-red-700 sm:max-w-[20rem]">
+    <p className="flex-sh break-words font-bold text-red-700 sm:max-w-[19rem]">
       {error?.message}
     </p>
   ) : (
