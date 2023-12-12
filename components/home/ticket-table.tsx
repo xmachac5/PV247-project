@@ -1,17 +1,11 @@
 "use client";
 
 import Link from 'next/link';
+import { Report } from "@/app/model/report";
 
-type Ticket = {
-    id: number;
-    title: string;
-    created_at: string;
-    state: string;
-    due_date: string;
-}
 
 type TicketTableProps = {
-	data: Ticket[];
+	data: Report[];
 };
 
 const TicketTable = ({ data }: TicketTableProps) => {
@@ -44,7 +38,7 @@ const TicketTable = ({ data }: TicketTableProps) => {
                 <td className="py-2 px-4 border-b">{ticket.state}</td>
                 <td className="py-2 px-4 border-b">{ticket.due_date}</td>
                 <td className="py-2 px-4 border-b">
-                  <Link href="/[id]" as={`/${ticket.id}`}>
+                  <Link href="/[id]" as={`/detail/${ticket.id}`}>
                     <p className="text-blue-500">View Details</p>
                   </Link>
                 </td>
