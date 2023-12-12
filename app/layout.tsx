@@ -11,7 +11,7 @@ export const metadata = {
   title: "Informer",
   description:
     "Informing about crime at workplace helps to keep you and your coleagues safe.",
-  metadataBase: new URL("https://pv-247-project-a3jkqayaz-xmachac5s-projects.vercel.app/"),
+  metadataBase: new URL("https://pv-247-project-sigma.vercel.app/"),
   themeColor: "#FFF",
 };
 
