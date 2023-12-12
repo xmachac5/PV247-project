@@ -1,42 +1,68 @@
 'use client';
 
-import { ReportType, ReportTypeDataSchema } from "@/app/model/reportType";
+import { ReportEdit, reportEditSchema } from "@/app/model/report";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef } from "react";
+import { ReportType } from "@prisma/client";
+import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-type ReportTypeDialogProps = {
+type ReportDialogProps = {
     id: string;
-    name: string;
+    type: string;
+    state: string;
 };
 
-export const ReportTypeEditDialog = ({
+export const ReportEditDialog = ({
     id,
-    name,
-}: ReportTypeDialogProps) => {
+    type,
+    state,
+}: ReportDialogProps) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
+    const [reportTypes, setReportTypes] = useState<ReportType[]>([]);
     const {
         register,
         handleSubmit,
         reset,
+        setValue, // Added for setting values
         formState: { errors }
-    } = useForm<ReportType>({
-        resolver: zodResolver(ReportTypeDataSchema)
+    } = useForm<ReportEdit>({
+        resolver: zodResolver(reportEditSchema)
     });
-    const onSubmit: SubmitHandler<ReportType> = async reportTypeData => {
+
+    useEffect(() => {
+        const fetchReportTypes = async () => {
+            try {
+                const response = await fetch('/api/reportType');
+                if (response.ok) {
+                    const data = await response.json();
+                    setReportTypes(data); // Assuming the response is an array of report types
+                } else {
+                    console.error('Error fetching report types:', response.statusText);
+                    // Handle error scenarios here
+                }
+            } catch (error) {
+                // Handle any error that occurs during fetch
+            }
+        };
+
+        fetchReportTypes();
+    }, []); // Empty dependency array ensures that this effect runs only once on component mount
+
+    const onSubmit: SubmitHandler<ReportEdit> = async reportData => {
         try {
-            const response = await fetch('/api/reportType', {
+            console.log(reportData);
+            const response = await fetch('/api/report', {
                 method: 'PUT',
-                body: JSON.stringify({ ...reportTypeData, id: id }),
+                body: JSON.stringify({ ...reportData, id: id }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
             if (response.ok) {
                 dialogRef.current?.close();
-                window.location.href = '/reportTypeList';
+                window.location.href = '/reportList';
             } else {
-                console.error('Error deleting report type:', response.statusText);
+                console.error('Error editing report:', response.statusText);
                 // Handle error scenarios here
             }
         } catch (error) {
@@ -56,31 +82,37 @@ export const ReportTypeEditDialog = ({
                             <label className="text-lg">
                                 Type:
                                 <div className="flex">
-                                    <input
-                                        type="text"
-                                        id="name"
+                                    <select
+                                        id="type"
                                         className="rounded border p-2"
-                                        {...register('name')}
-                                    />
+                                        {...register('type')}
+                                    >
+                                        {reportTypes.map((reportType, index) => (
+                                            <option key={reportType.id} value={reportType.name}>
+                                                {reportType.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                             </label>
-                            {errors.name?.message && (
-                                <p className="text-red-500">{errors.name?.message}</p>
+                            {errors.type?.message && (
+                                <p className="text-red-500">{errors.type?.message}</p>
                             )}
                             <label className="text-lg">
                                 State:
                                 <div className="flex">
-                                    <input
-                                        type="text"
-                                        id="name"
+                                    <select
+                                        id="state"
                                         className="rounded border p-2"
-                                        {...register('name')}
-                                    />
+                                        {...register('state')}
+                                    >
+                                        <option value="New">New</option>
+                                        <option value="In progress">In progress</option>
+                                        <option value="Resolved">Resolved</option>
+                                        <option value="Denied">Denied</option>
+                                    </select>
                                 </div>
                             </label>
-                            {errors.name?.message && (
-                                <p className="text-red-500">{errors.name?.message}</p>
-                            )}
                             <div className="flex flex-col justify-center md:flex-row">
                                 <button
                                     className="btn-primary"

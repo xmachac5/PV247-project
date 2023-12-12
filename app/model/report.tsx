@@ -29,3 +29,14 @@ const dbReportSchema = reportSchema.extend({
 });
 
 export type DbReport = z.infer<typeof dbReportSchema>;
+
+export const reportEditSchema = z.object({
+  state: z.enum(['New', 'In progress', 'Resolved', 'Denied']),
+  type: z.string(),
+})
+
+export type ReportEdit = {
+  id: string;
+  type: string;
+  state: string,
+}
