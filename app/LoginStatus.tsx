@@ -4,19 +4,15 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 
 export const LoginStatus = () => {
   const { data, status } = useSession();
-  console.log(data?.user);
-  console.log(status);
   if (status === 'loading') return <div>loading...</div>;
   if (status === 'unauthenticated') {
     return (
-      <div>
-        <button
+        <button 
           onClick={() => signIn('Credentials')}
-          className="rounded border border-white p-3"
+          className="rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black"
         >
-          Sign in with Discord
+          Lawyer portal
         </button>
-      </div>
     );
   }
   return (
@@ -24,7 +20,7 @@ export const LoginStatus = () => {
       Hi, {data?.user.name}
       <button
         onClick={() => signOut()}
-        className="rounded border border-white p-3"
+        className="rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black"
       >
         Sign out
       </button>
