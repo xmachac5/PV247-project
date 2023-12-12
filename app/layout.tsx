@@ -8,10 +8,10 @@ import { Suspense } from "react";
 
 
 export const metadata = {
-  title: "Precedent - Building blocks for your Next.js project",
+  title: "Informer",
   description:
-    "Precedent is the all-in-one solution for your Next.js project. It includes a design system, authentication, analytics, and more.",
-  metadataBase: new URL("https://precedent.dev"),
+    "Informing about crime at workplace helps to keep you and your coleagues safe.",
+  metadataBase: new URL("https://pv-247-project-a3jkqayaz-xmachac5s-projects.vercel.app/"),
   themeColor: "#FFF",
 };
 
