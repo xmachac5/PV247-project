@@ -2,6 +2,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions, getServerSession, type DefaultSession } from "next-auth";
+import bcrypt from "bcrypt";
 
 declare module 'next-auth' {
   interface Session extends DefaultSession {
@@ -28,45 +29,29 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
         email: { label: "Email", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, req) {
         try {
-          await prisma.user.upsert({
-            where: {
-              email: "admin",
-            },
-            update: {},
-            create : {
-              name: "Admin",
-              email: "admin",
-              password: "admin",
-            }
-          })
-          const user = await prisma.user.findFirst({
-            where: {
-                password: credentials?.password,
-                email: credentials?.email,
+          if (credentials) {
+            const user = await prisma.user.findFirst({
+              where: {
+                email: credentials.email,
               },
             });
-          console.log(user);
 
-          if (user) {
-            // Any object returned will be saved in `user` property of the JWT
-            return user;
+            if (user && (await bcrypt.compare(credentials.password, user.password))) {
+              // Passwords match
+              return user;
+            } else {
+              // Passwords don't match
+              return null;
+            }
           } else {
-            // If you return null then an error will be displayed advising the user to check their details.
             return null;
-
-            // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
           }
         } catch (error) {
           return null;

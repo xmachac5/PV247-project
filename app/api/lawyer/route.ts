@@ -1,10 +1,13 @@
 import prisma from '@/lib/prisma'
 import { Lawyer, LawyerDataSchema } from '@/app/model/lawyer';
+import bcrypt from "bcrypt";
 
 export const POST = async (
   req: Request,
 ) => { 
     const data = await LawyerDataSchema.parse(await req.json());
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    data.password = hashedPassword;
     const lawyer = await prisma.user.create({
       data
     });
