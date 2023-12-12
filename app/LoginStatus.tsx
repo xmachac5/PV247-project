@@ -8,7 +8,7 @@ export const LoginStatus = () => {
   if (status === 'unauthenticated') {
     return (
         <button 
-          onClick={() => signIn('Credentials')}
+          onClick={() => signIn('Credentials', {callbackUrl: "/"})}
           className="rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black"
         >
           Lawyer portal
@@ -19,7 +19,7 @@ export const LoginStatus = () => {
     <div className="flex gap-3 items-center">
       Hi, {data?.user.name}
       <button
-        onClick={() => signOut()}
+        onClick={() => signOut({callbackUrl: "/"})}
         className="rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black"
       >
         Sign out
