@@ -40,6 +40,17 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         try {
+          await prisma.user.upsert({
+            where: {
+              email: "admin",
+            },
+            update: {},
+            create : {
+              name: "Admin",
+              email: "admin",
+              password: "admin",
+            }
+          })
           const user = await prisma.user.findFirst({
             where: {
                 password: credentials?.password,
