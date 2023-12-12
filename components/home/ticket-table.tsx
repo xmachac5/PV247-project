@@ -1,11 +1,10 @@
 "use client";
 
 import Link from 'next/link';
-import { Report } from "@/app/model/report";
-
+import { Report, DbReport } from "@/app/model/report";
 
 type TicketTableProps = {
-	data: Report[];
+	data: DbReport[];
 };
 
 const TicketTable = ({ data }: TicketTableProps) => {
@@ -34,9 +33,9 @@ const TicketTable = ({ data }: TicketTableProps) => {
               >
                 <td className="py-2 px-4 border-b">{ticket.id}</td>
                 <td className="py-2 px-4 border-b">{ticket.title}</td>
-                <td className="py-2 px-4 border-b">{ticket.created_at}</td>
-                <td className="py-2 px-4 border-b">{ticket.state}</td>
-                <td className="py-2 px-4 border-b">{ticket.due_date}</td>
+                <td className="py-2 px-4 border-b">{ticket.createdAt.toLocaleString()}</td>
+                <td className="py-2 px-4 border-b">{/*ticket.state*/}</td>
+                <td className="py-2 px-4 border-b">{/*ticket.due_date*/}</td>
                 <td className="py-2 px-4 border-b">
                   <Link href="/[id]" as={`/detail/${ticket.id}`}>
                     <p className="text-blue-500">View Details</p>

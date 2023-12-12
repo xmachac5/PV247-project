@@ -1,24 +1,25 @@
 import TicketTable from "@/components/home/ticket-table";
+import prisma from "@/lib/prisma"
+import { PersonalData } from "../model/report";
 
-const WhistleblowerPage = () => {
-  const data = [
-    {
-      id: 1,
-      title: "test1",
-      created_at: "28.09.2023",
-      state: "new",
-      due_date: "27.10.2023",
-    },
-    {
-      id: 2,
-      title: "test2",
-      created_at: "28.09.2023",
-      state: "new",
-      due_date: "27.10.2023",
-    },
-  ];
+const WhistleblowerPage = async () => {
+  const reports = await prisma.report.findMany({
+    include: {
+      personalData: true,
+    }
+  });
 
-  return <TicketTable data={data}></TicketTable>;
+  const mapPersonalData = (peronalData: any): PersonalData | undefined => {
+    if (peronalData == undefined) {
+      return undefined;
+    } else{
+      return {...peronalData, id: undefined};
+    }
+  };
+
+  const transformed = reports.map(report => ({ ...report, personalData: mapPersonalData(report.personalData)}));
+
+  return <TicketTable data={transformed}></TicketTable>;
 };
 
 export default WhistleblowerPage;

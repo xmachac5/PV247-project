@@ -74,6 +74,7 @@ model ReportPersonalData {
 
 model Report {
   id           String              @id @default(cuid())
+  createdAt    DateTime            @default(now())
   title        String
   reason       String
   description  String
